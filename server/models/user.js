@@ -8,7 +8,7 @@ const Schema = Mongoose.Schema;
 const UserSchema = new Schema({
 	name: { type: String, trim: true },
 	createdAt: { type: Date, default: Date.now },
-	email: { type: String, required: true, trim: true },
+	email: { type: String, required: true, trim: true, unique: true },
 	password: { type: String, required: true, select: false },
 	passwordSalt: { type: String, required: true, select: false }
 });

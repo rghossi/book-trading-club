@@ -73,3 +73,5 @@ server.listen(port, err => {
   }
   console.info(`Server running on http://localhost:${port} [${env}]`);
 });
+
+export default server;
