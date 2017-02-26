@@ -1,6 +1,9 @@
 import path from 'path';
 import { Server } from 'http';
 import Express from 'express';
+import passport from 'passport';
+import { Strategy } from 'passport-local';
+import User from './models/user';
 // import React from 'react';
 // import { renderToString } from 'react-dom/server';
 // import { match, RouterContext } from 'react-router';
@@ -9,7 +12,6 @@ import Express from 'express';
 import Mongoose from 'mongoose';
 // import apiRoutes from './apiRoutes';
 import BodyParser from 'body-parser';
-// import Passport from 'passport';
 // import * as UserCtrl from './controllers/user.controller';
 import bluebird from 'bluebird';
 
@@ -26,19 +28,37 @@ db.once('open', function(){
 
 Mongoose.connect(MONGODB_URI);
 
-//TODO: use local passport strategy
+//Passport config
+passport.use(new Strategy(
+  function(userId, password, done) {
+    User.findById(userId, function (err, user) {
+      if (err) { return done(err); }
+      if (!user) { return done(null, false); }
+      if (!user.verifyPassword(password)) { return done(null, false); }
+      return done(null, user);
+    });
+  }
+));
 
-// Passport.serializeUser(UserCtrl.serialize);
-// Passport.deserializeUser(UserCtrl.deserialize);
+passport.serializeUser(function(user, cb) {
+  cb(null, user._id);
+});
+
+passport.deserializeUser(function(id, cb) {
+  User.findById(id, function (err, user) {
+    if (err) { return cb(err); }
+    cb(null, user);
+  });
+});
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 // app.use(Express.static(path.join(__dirname, 'static')));
-// app.use(BodyParser.json());
-// app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
-// app.use(Passport.initialize());
-// app.use(Passport.session());
+app.use(BodyParser.json());
+app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
+app.use(passport.initialize());
+app.use(passport.session());
 // app.use('/api', apiRoutes);
 
 app.get('*', (req, res) => {
