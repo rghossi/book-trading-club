@@ -14,20 +14,24 @@ const UserSchema = new Schema({
 });
 
 UserSchema.methods.verifyPassword = function verifyPassword(password) {
-	const passwordHash = passwordHelper.hash(password, this.passwordSalt);
-
-  if (passwordHash === this.password) {
-  	return true;
-  } else {
-  	return false;
-  }
+	passwordHelper.hash(password, this.passwordSalt, (err, hash) => {
+		if (err) throw err;
+		if (hash === this.password) {
+	  	return true;
+	  } else {
+	  	return false;
+	  }
+	});
 };
 
 UserSchema.statics.createNew = function createNew(user, cb) {
-	const passwordHash = passwordHelper.hash(user.password);
-	let NewUser = new this(user);
-	NewUser.password = passwordHash;
-  NewUser.save(cb);
+	passwordHelper.hash(user.password, (err, hash, salt) => {
+		if (err) throw err;
+		let NewUser = new this(user);
+		NewUser.password = hash;
+		NewUser.passwordSalt = salt;
+	  NewUser.save(cb);
+	});
 };
 
 export default Mongoose.model('User', UserSchema);

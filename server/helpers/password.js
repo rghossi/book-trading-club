@@ -6,23 +6,24 @@ const ITERATIONS = 10000;
 const DIGEST = 'sha256';
 
 //Function adapted from http://blog.robertonodi.me/node-authentication-series-email-and-password/
-export function hashPassword(password, salt) {
+export function hash(password, salt, cb) {
 	const len = LEN / 2;
 
-  if (arguments.length === 2) {
+  if (arguments.length === 3) {
     crypto.pbkdf2(password, salt, ITERATIONS, len, DIGEST, function(err, derivedKey) {
-      if (err) throw err;
-      return derivedKey.toString('hex');
+      if (err) return cb(err);
+      return cb(null, derivedKey.toString('hex'));
     });
   } else {
+  	cb = salt;
     crypto.randomBytes(SALT_LEN / 2, function(err, salt) {
-      if (err) throw err;
+      if (err) return cb(err);
 
       salt = salt.toString('hex');
       crypto.pbkdf2(password, salt, ITERATIONS, len, DIGEST, function(err, derivedKey) {
-        if (err) throw err;
+        if (err) return cb(err);
 
-        return {passwordHash: derivedKey.toString('hex'), salt};
+        return cb(null, derivedKey.toString('hex'), salt);
       });
     });
   }
