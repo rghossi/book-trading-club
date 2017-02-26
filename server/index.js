@@ -11,7 +11,9 @@ import Mongoose from 'mongoose';
 import BodyParser from 'body-parser';
 // import Passport from 'passport';
 // import * as UserCtrl from './controllers/user.controller';
+import bluebird from 'bluebird';
 
+Mongoose.Promise = bluebird;
 const app = new Express();
 const server = new Server(app);
 const MONGODB_URI = process.env.database || 'mongodb://localhost/booktradingclub';
