@@ -1,5 +1,4 @@
 import chai from 'chai';
-import server from '../server/index';
 import User from '../server/models/user';
 import mongoose from 'mongoose';
 

@@ -10,7 +10,7 @@ import User from './models/user';
 // import routes from './routes';
 // import NotFoundPage from './components/NotFoundPage';
 import Mongoose from 'mongoose';
-// import apiRoutes from './apiRoutes';
+import apiRoutes from './routes';
 import BodyParser from 'body-parser';
 // import * as UserCtrl from './controllers/user.controller';
 import bluebird from 'bluebird';
@@ -55,11 +55,12 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 // app.use(Express.static(path.join(__dirname, 'static')));
+app.use(BodyParser.urlencoded({ extended: true }));
 app.use(BodyParser.json());
 app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
-// app.use('/api', apiRoutes);
+app.use('/api', apiRoutes);
 
 app.get('*', (req, res) => {
   res.render('index');
@@ -74,4 +75,4 @@ server.listen(port, err => {
   console.info(`Server running on http://localhost:${port} [${env}]`);
 });
 
-export default server;
+export default app;
