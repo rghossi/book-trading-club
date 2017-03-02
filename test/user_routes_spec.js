@@ -5,6 +5,7 @@ import User from '../server/models/user';
 
 chai.use(chaiHttp);
 const should = chai.should();
+const agent = chai.request.agent(server);
 
 describe('routes : users', () => {
 
@@ -139,4 +140,94 @@ describe('routes : users', () => {
     })
   })
 
+  describe('GET /api/logout', () => {
+    it ('should logout user', (done) => {
+      User.createNew(newUserData, function(err, user){
+        if (err) throw err;
+        agent
+        .post('/api/login')
+        .send({email: newUserData.email, password: newUserData.password})
+        .end((err, res) => {
+          if (err) throw err;
+          agent
+          .get('/api/logout')
+          .end((err, res) => {
+            if (err) throw err;
+            res.should.have.status(200);
+            res.body.should.be.an('object');
+            res.body.should.not.have.property('user');
+            res.body.should.have.property('message');
+            done();
+          })
+        })
+      });
+    })
+
+    it ('should fail when user is not logged in', (done) => {
+      chai.request(server)
+      .get('/api/logout')
+      .end((err, res) => {
+        res.should.have.status(401);
+        res.body.should.be.an('object');
+        res.body.should.not.have.property('user');
+        done();
+      });
+    })
+
+  })
+
+  describe('PUT /api/users/:userId', () => {
+    it ('should update user and return it updated', (done) => {
+      User.createNew(newUserData, function(err, user){
+        agent
+        .post('/api/login')
+        .send({email: newUserData.email, password: newUserData.password})
+        .end((err, res) => {
+          if (err) throw err;
+          agent
+          .put('/api/users/' + user._id)
+          .send({user: {
+            name: "Rafael",
+            email: "rafael.ghossi@gmail.com",
+            city: "Campos",
+            state: "RJ"
+          }})
+          .end((err, res) => {
+            if (err) throw err;
+            res.should.have.status(200);
+            res.should.be.json;
+            res.body.should.be.an('object');
+            res.body.should.have.property('_id');
+            res.body.name.should.equal("Rafael");
+            res.body.email.should.equal("rafael.ghossi@gmail.com");
+            res.body.city.should.equal("Campos");
+            res.body.state.should.equal("RJ");
+            should.not.exist(res.body.password);
+            should.not.exist(res.body.passwordSalt);
+            done();
+          })
+        })
+      });
+    })
+
+    it ('should not update when user is not logged in', (done) => {
+      User.createNew(newUserData, function(err, user){
+        agent
+        .put('/api/users/' + user._id)
+        .send({user: {
+          name: "Rafael",
+          email: "rafael.ghossi@gmail.com",
+          city: "Campos",
+          state: "RJ"
+        }})
+        .end((err, res) => {
+          res.should.have.status(401);
+          res.should.be.json;
+          res.body.should.be.an('object');
+          res.body.should.not.have.property('user');
+          done();
+        })
+      });
+    })
+  })
 });
