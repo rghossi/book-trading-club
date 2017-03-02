@@ -76,4 +76,67 @@ describe('routes : users', () => {
     })
   })
 
+  describe('POST /api/login', () => {
+    it ('should login user', (done) => {
+      User.createNew(newUserData, function(err, user){
+        if (err) throw err;
+        chai.request(server)
+        .post('/api/login')
+        .send({email: newUserData.email, password: newUserData.password})
+        .end((err, res) => {
+          if (err) throw err;
+          res.should.have.status(200);
+          res.should.be.json;
+          res.body.should.be.a('object');
+          res.body.should.have.property('user');
+          should.not.exist(res.body.user.password);
+          should.not.exist(res.body.user.passwordSalt);
+          done();
+        })
+      });
+    })
+
+    it ('should fail for non-existent users', (done) => {
+      chai.request(server)
+      .post('/api/login')
+      .send({email: newUserData.email, password: newUserData.password})
+      .end((err, res) => {
+        res.should.have.status(401);
+        res.body.should.be.a('object');
+        res.body.should.not.have.property('user');
+        done();
+      });
+    })
+
+    it ('should fail for wrong email', (done) => {
+      User.createNew(newUserData, function(err, user){
+        if (err) throw err;
+        chai.request(server)
+        .post('/api/login')
+        .send({email: "a@b.com", password: newUserData.password})
+        .end((err, res) => {
+          res.should.have.status(401);
+          res.body.should.be.a('object');
+          res.body.should.not.have.property('user');
+          done();
+        })
+      });
+    })
+
+    it ('should fail for wrong password', (done) => {
+      User.createNew(newUserData, function(err, user){
+        if (err) throw err;
+        chai.request(server)
+        .post('/api/login')
+        .send({email: newUserData.email, password: "12345"})
+        .end((err, res) => {
+          res.should.have.status(401);
+          res.body.should.be.a('object');
+          res.body.should.not.have.property('user');
+          done();
+        })
+      });
+    })
+  })
+
 });
