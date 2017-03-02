@@ -41,6 +41,39 @@ describe('routes : users', () => {
 				done();
   		})
   	})
+
+    it("should not create if email already exists", function(done) {
+      chai.request(server)
+      .post('/api/users/new')
+      .send({user: newUserData})
+      .end((err, res) => {
+        if (err) throw err;
+        res.should.have.status(200);
+        res.should.be.json;
+        res.body.should.be.a('object');
+        res.body.should.have.property('_id');
+        res.body.should.have.property('name');
+        res.body.should.have.property('email');
+        res.body.name.should.equal(newUserData.name);
+        res.body.email.should.equal(newUserData.email);
+        should.not.exist(res.body.password);
+        should.not.exist(res.body.passwordSalt);
+        chai.request(server)
+        .post('/api/users/new')
+        .send({user: newUserData})
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.should.be.json;
+          res.body.should.be.a('object');
+          res.body.should.have.property('message');
+          should.not.exist(res.body._id);
+          should.not.exist(res.body.email);
+          should.not.exist(res.body.password);
+          should.not.exist(res.body.passwordSalt);
+          done();
+        })
+      })
+    })
   })
 
 });
