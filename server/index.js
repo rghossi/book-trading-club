@@ -30,8 +30,8 @@ Mongoose.connect(MONGODB_URI);
 
 //Passport config
 passport.use(new Strategy(
-  function(userId, password, done) {
-    User.findById(userId, function (err, user) {
+  function(email, password, done) {
+    User.findOne({ email }, function (err, user) {
       if (err) { return done(err); }
       if (!user) { return done(null, false); }
       if (!user.verifyPassword(password)) { return done(null, false); }
