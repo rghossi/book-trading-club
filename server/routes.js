@@ -9,5 +9,6 @@ router.post('/login', passport.authenticate('local'), function(req, res) {
     res.json({user: req.user});
   }
 );
+router.get('/logout', UserController.loggedIn, UserController.logout);
 
 export default router;
