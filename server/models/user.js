@@ -9,6 +9,8 @@ const UserSchema = new Schema({
 	name: { type: String, trim: true },
 	createdAt: { type: Date, default: Date.now },
 	email: { type: String, required: true, trim: true, unique: true },
+	city: { type: String, required: false, trim: true },
+	state: { type: String, required: false, trim: true },
 	password: { type: String, required: true, select: false },
 	passwordSalt: { type: String, required: true, select: false }
 });

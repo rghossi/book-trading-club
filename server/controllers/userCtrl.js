@@ -1,7 +1,6 @@
 import User from '../models/user';
 
 export function loggedIn(req, res, next) {
-		console.log(req.user, req.session)
     if (req.user) {
         next();
     } else {
@@ -17,6 +16,26 @@ export function createNew(req, res) {
 			newUser.password = undefined;
 			newUser.passwordSalt = undefined;
 			res.json(newUser);
+		}	else {
+			res.status(500).send();
+		}
+	})
+}
+
+export function updateUser(req, res) {
+	const userId = req.params.userId;
+	const newUser = req.body.user;
+	User.findById(userId, function(err, user) {
+		if (err) res.status(400).send({message: err});
+		else if(user) {
+			if (newUser.name) user.name = newUser.name;
+			if (newUser.email) user.email = newUser.email;
+			if (newUser.city) user.city = newUser.city;
+			if (newUser.state) user.state = newUser.state;
+			user.save(function(err, updatedUser){
+				if (err) throw err;
+				else res.json(updatedUser);
+			})
 		}	else {
 			res.status(500).send();
 		}
