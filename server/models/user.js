@@ -13,13 +13,13 @@ const UserSchema = new Schema({
 	passwordSalt: { type: String, required: true, select: false }
 });
 
-UserSchema.methods.verifyPassword = function verifyPassword(password) {
+UserSchema.methods.verifyPassword = function verifyPassword(password, cb) {
 	passwordHelper.hash(password, this.passwordSalt, (err, hash) => {
 		if (err) throw err;
 		if (hash === this.password) {
-	  	return true;
+	  	return cb(true);
 	  } else {
-	  	return false;
+	  	return cb(false);
 	  }
 	});
 };

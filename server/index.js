@@ -29,13 +29,20 @@ db.once('open', function(){
 Mongoose.connect(MONGODB_URI);
 
 //Passport config
-passport.use(new Strategy(
-  function(email, password, done) {
-    User.findOne({ email }, function (err, user) {
+passport.use(new Strategy({
+    usernameField: 'email',
+    passwordField: 'password'
+  },
+  function(username, password, done) {
+    User.findOne({ email: username }).select('+password +passwordSalt').exec(function (err, user) {
       if (err) { return done(err); }
       if (!user) { return done(null, false); }
-      if (!user.verifyPassword(password)) { return done(null, false); }
-      return done(null, user);
+      user.verifyPassword(password, function(correctPassword){
+        user.password = null;
+        user.passwordSalt = null;
+        if (correctPassword) return done(null, user);
+        else return done(null, false);
+      })
     });
   }
 ));
