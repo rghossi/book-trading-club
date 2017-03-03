@@ -11,7 +11,8 @@ const BookSchema = new Schema({
 	author: { type: String, trim: true, required: true },
 	isbn: { type: String, trim: true, required: true, unique: true },
 	owner: ObjectId,
-	coverUrl: String
+	coverUrl: String,
+	didTrade: Boolean
 });
 
 export default Mongoose.model('Book', BookSchema);
