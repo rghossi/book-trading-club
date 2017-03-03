@@ -91,4 +91,42 @@ describe('routes : books', () => {
         })
   	})
   })
+
+  describe('GET /api/books', () => {
+  	it ('should get all books', (done) => {
+  		agent
+        .post('/api/books/new')
+        .send({book: newBookData})
+        .end((err, res) => {
+        	if (err) throw err;
+        	agent
+        	.get('/api/books')
+        	.end((err, res) => {
+        		if (err) throw err;
+        		res.should.have.status(200);
+            res.body.should.be.an('object');
+            res.body.should.have.property('books');
+            const books = res.body.books;
+            books.length.should.equal(1);
+            books[0].name.should.equal(newBookData.name);
+            books[0].author.should.equal(newBookData.author);
+            books[0].isbn.should.equal(newBookData.isbn);
+            books[0].coverUrl.should.equal(newBookData.coverUrl);
+            should.exist(books[0].owner);
+            done();
+        	})
+        })
+  	})
+
+  	it ('should not get if user is not authenticated', (done) => {
+  		chai.request(server)
+        .get('/api/books')
+        .end((err, res) => {
+      		res.should.have.status(401);
+          res.body.should.be.an('object');
+          should.not.exist(res.body.books);
+          done();
+        })
+  	})
+  })
 })
