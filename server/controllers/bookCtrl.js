@@ -41,3 +41,45 @@ export function sendTradeRequest(req, res) {
 		})
 	})
 }
+
+export function acceptTradeRequest(req, res) {
+	Trade.findById(req.body.tradeId, (err, trade) => {
+		if (err || !trade) res.status(400).send({message: "Trade not found!"});
+		if (trade.status !== "sent") res.status(403).send({message: "Trade already accepted/declined!"});
+		Book.findById(trade.theirs, (err, book) => {
+			if (err || !book) res.status(500).send({message: "Couldn't find their book."});
+			if (String(book.owner) !== String(req.user._id)) res.status(403).send({message: "You're not allowed to accept this trade!"});
+			else {
+				trade.status = "accepted";
+				trade.save((err, updatedTrade) => {
+					book.didTrade = true;
+					book.save((err, updatedBook) => {
+						Book.findById(updatedTrade.mine, (err, myBook) => {
+							myBook.didTrade = true;
+							myBook.save((err, myUpdatedBook) => {
+								res.json({trade: updatedTrade});
+							})
+						})
+					})
+				})
+			}
+		})
+	})	
+}
+
+export function declineTradeRequest(req, res) {
+	Trade.findById(req.body.tradeId, (err, trade) => {
+		if (err || !trade) res.status(400).send({message: "Trade not found!"});
+		if (trade.status !== "sent") res.status(403).send({message: "Trade already accepted/declined!"});
+		Book.findById(trade.theirs, (err, book) => {
+			if (err || !book) res.status(500).send({message: "Couldn't find their book."});
+			if (String(book.owner) !== String(req.user._id)) res.status(403).send({message: "You're not allowed to decline this trade!"});
+			else {
+				trade.status = "declined";
+				trade.save((err, updatedTrade) => {
+					res.json({trade: updatedTrade});
+				})
+			}
+		})
+	})	
+}

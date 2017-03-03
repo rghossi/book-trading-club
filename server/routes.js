@@ -18,5 +18,7 @@ router.get("/books", UserController.loggedIn, BookController.getAll);
 router.post("/books/new", UserController.loggedIn, BookController.addBook);
 router.post("/books/trade", UserController.loggedIn, BookController.sendTradeRequest);
 
+router.put("/trades/accept", UserController.loggedIn, BookController.acceptTradeRequest);
+router.put("/trades/decline", UserController.loggedIn, BookController.declineTradeRequest);
 
 export default router;
