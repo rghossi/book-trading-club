@@ -16,3 +16,13 @@ export function addBook(req, res) {
 		}
 	})
 }
+
+export function getAll(req, res) {
+	Book.find({}, function(err, books){
+		if (err) throw err;
+		if (!books) res.status(404).send({message: "Books not found"});
+		else {
+			res.json({books});
+		}
+	})
+}
