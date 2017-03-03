@@ -9,7 +9,7 @@ const BookSchema = new Schema({
 	name: { type: String, trim: true, required: true },
 	createdAt: { type: Date, default: Date.now },
 	author: { type: String, trim: true, required: true },
-	isbn: { type: String, trim: true, required: true },
+	isbn: { type: String, trim: true, required: true, unique: true },
 	owner: ObjectId,
 	coverUrl: String
 });
