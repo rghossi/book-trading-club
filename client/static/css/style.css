@@ -14,12 +14,17 @@ body {
   float: none;
 }
 
-.navbar > .container {
+.navbar > .container, .navbar-collapse {
   text-align: center;
 }
 
 .navbar {
   background-color: #F28F3B;
+}
+
+.link {
+  font-size: 20px;
+  color: white;
 }
 
 .navbar-header > a {
@@ -28,6 +33,11 @@ body {
   color: white;
 }
 
-.navbar-header > a:hover {
+.navbar-header > a:hover, .link:hover {
+  text-decoration: none;
   color: #FBE0C9;
+}
+
+.navbar-nav {
+  margin-top: 7.5px; 
 }

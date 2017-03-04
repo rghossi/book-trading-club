@@ -9,7 +9,7 @@ export default class App extends Component {
       <div>
         <Header />
         <Grid>
-        	Hello!
+        	{this.props.children}
         </Grid>
         <Footer />
       </div>
