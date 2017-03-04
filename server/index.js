@@ -61,7 +61,7 @@ passport.deserializeUser(function(id, cb) {
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// app.use(Express.static(path.join(__dirname, 'static')));
+app.use(Express.static('dist'));
 app.use(BodyParser.urlencoded({ extended: true }));
 app.use(BodyParser.json());
 app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));

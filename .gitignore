@@ -38,3 +38,6 @@ jspm_packages
 
 # MAC
 .DS_Store
+
+#webpack
+dist/
