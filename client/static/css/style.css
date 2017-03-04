@@ -14,7 +14,7 @@ body {
   float: none;
 }
 
-.navbar > .container, .navbar-collapse {
+.navbar > .container {
   text-align: center;
 }
 
@@ -29,7 +29,8 @@ body {
 
 .navbar-header > a {
   font-size: 36px;
-  margin-right: 10px;
+  margin-right: 5px;
+  margin-left: 5px;
   color: white;
 }
 
@@ -40,4 +41,10 @@ body {
 
 .navbar-nav {
   margin-top: 7.5px; 
+}
+
+@media (max-width: 768px) {
+  .navbar-header > .link {
+    margin-left: 44px;
+  }
 }
