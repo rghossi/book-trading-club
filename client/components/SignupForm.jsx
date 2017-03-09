@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Row, Col, FormGroup, FormControl, ControlLabel, HelpBlock, Button } from 'react-bootstrap';
+import { signup } from '../actions';
 
-export default class SignupForm extends Component {
+class SignupForm extends Component {
 	constructor() {
 		super();
 		this.state = {
@@ -35,7 +37,12 @@ export default class SignupForm extends Component {
 
   handleSubmit(e) {
   	e.preventDefault();
-  	console.log(this.state);
+  	const { dispatch } = this.props;
+    const { email, password } = this.state;
+    let user = {};
+    user.email = email;
+    user.password = password;
+    dispatch(signup(user));
   }
 
   render() {
@@ -77,3 +84,5 @@ export default class SignupForm extends Component {
     );
   }
 }
+
+export default connect()(SignupForm)
