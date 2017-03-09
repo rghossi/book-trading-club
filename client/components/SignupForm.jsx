@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Row, Col, FormGroup, FormControl, ControlLabel, HelpBlock, Button } from 'react-bootstrap';
 
-export default class LoginForm extends Component {
+export default class SignupForm extends Component {
 	constructor() {
 		super();
 		this.state = {
@@ -12,15 +12,16 @@ export default class LoginForm extends Component {
 
 	getEmailValidationState() {
 		const email = this.state.email;
-		if (email.length > 0) return "success";
+		if (email.length > 3 && email.indexOf('@') !== -1) return 'success';
 		else if (email.length === 0) return null;
+		else if (email.indexOf('@') === -1) return 'error';
 		return null;
 	}
 
 	getPasswordValidationState() {
 		const length = this.state.password.length;
-    if (length > 0) return "success";
-    else if (length === 0) return null;
+    if (length > 5) return 'success';
+    else if (length > 0) return 'error';
     return null;
 	}
 
@@ -65,9 +66,10 @@ export default class LoginForm extends Component {
                 onChange={this.handlePasswordChange.bind(this)}
               />
               <FormControl.Feedback />
+              <HelpBlock>Must have more than 5 characteres.</HelpBlock>
             </FormGroup>
             <Button type="submit" disabled={this.getEmailValidationState() !== "success" || this.getPasswordValidationState() !== "success"}>
-    		      Login
+    		      Signup
     		    </Button>
           </form>
         </Col>

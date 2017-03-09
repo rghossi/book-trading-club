@@ -6,6 +6,7 @@ import {Provider} from 'react-redux';
 import App from './App';
 import Home from './Home';
 import LoginForm from './LoginForm';
+import SignupForm from './SignupForm';
 import NotFoundPage from './NotFoundPage';
 
 export default class Routes extends React.Component {
@@ -16,6 +17,7 @@ export default class Routes extends React.Component {
 		  <Route path="/" component={App}>
 		    <IndexRoute component={Home}/>
 		    <Route path="login" component={LoginForm}/>
+        <Route path="signup" component={SignupForm}/>
 		    <Route path="*" component={NotFoundPage}/>
 		  </Route>
 		);

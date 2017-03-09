@@ -13,6 +13,7 @@ export default class Header extends Component {
 		    <Navbar.Collapse>
 			    <Nav pullRight>
 			    	<NavItem componentClass="span"><Link className="link" to="/login">Login</Link></NavItem>
+			    	<NavItem componentClass="span"><Link className="link" to="/signup">Signup</Link></NavItem>
 			    </Nav>
 		    </Navbar.Collapse>
 		  </Navbar>
