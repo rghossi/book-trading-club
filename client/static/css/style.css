@@ -49,3 +49,13 @@ body {
     margin-left: 44px;
   }
 }
+
+button.link {
+  background:none!important;
+  color: white;
+  border:none; 
+  padding:0!important;
+  font: inherit;
+  cursor: pointer;
+  font-size: 20px;
+}

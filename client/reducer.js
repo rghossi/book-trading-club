@@ -1,7 +1,8 @@
 import { combineReducers } from 'redux';
 import { SET_STATE, SIGNUP_REQUEST, SIGNUP_SUCCESS, 
   SIGNUP_ERROR, LOGIN_REQUEST, LOGIN_SUCCESS, 
-  LOGIN_ERROR } from './actions';
+  LOGIN_ERROR, LOGOUT_REQUEST, LOGOUT_SUCCESS, 
+  LOGOUT_ERROR } from './actions';
 
 function setState(state, newState) {
   return Object.assign({}, state, newState);
@@ -50,6 +51,19 @@ function auth(state = {
         isFetching: false,
         isAuthenticated: false,
         didInvalidate: true
+      })
+    case LOGOUT_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: true,
+        isAuthenticated: true,
+        didInvalidate: false
+      })
+    case LOGOUT_SUCCESS:
+      return Object.assign({}, state, {
+        isFetching: false,
+        isAuthenticated: false,
+        didInvalidate: false,
+        user: undefined
       })
     default:
       return state;
