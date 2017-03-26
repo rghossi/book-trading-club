@@ -98,7 +98,7 @@ export function login(user) {
       if (json.message){
         dispatch(errorLogin())
       } else {
-        dispatch(successLogin(json))
+        dispatch(successLogin(json.user))
         dispatch(push('/'));
       }
     })
