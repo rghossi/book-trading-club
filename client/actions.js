@@ -17,6 +17,9 @@ export const UPDATE_USER_ERROR = 'UPDATE_USER_ERROR';
 export const MYBOOKS_REQUEST = 'MYBOOKS_REQUEST';
 export const MYBOOKS_SUCCESS = 'MYBOOKS_SUCCESS';
 export const MYBOOKS_ERROR = 'MYBOOKS_ERROR';
+export const ADD_NEW_BOOK_REQUEST = 'ADD_NEW_BOOK_REQUEST';
+export const ADD_NEW_BOOK_SUCCESS = 'ADD_NEW_BOOK_SUCCESS';
+export const ADD_NEW_BOOK_ERROR = 'ADD_NEW_BOOK_ERROR';
 
 export function setState(state) {
   return {
@@ -225,6 +228,48 @@ export function getMyBooks(userId) {
       } else {
         let mybooks = json.books.filter((book) => String(book.owner) === String(userId))
         dispatch(successMyBooks(mybooks))
+      }
+    })
+  }
+}
+
+function requestAddNewBook(user) {
+  return {
+    type: ADD_NEW_BOOK_REQUEST
+  }
+}
+
+function successAddNewBook(book) {
+  return {
+    type: ADD_NEW_BOOK_SUCCESS,
+    book
+  }
+}
+
+function errorAddNewBook() {
+  return {
+    type: ADD_NEW_BOOK_ERROR
+  }
+}
+
+export function addNewBook(bookName, userId) {
+  return function (dispatch) {
+    dispatch(requestAddNewBook());
+    return fetch("/api/books/new", {
+      credentials: 'same-origin',
+      method: 'POST',
+      headers: {  
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({bookName})
+    })
+    .then(response => response.json())
+    .then(json => {
+      if (json.message){
+        dispatch(errorAddNewBook())
+      } else {
+        dispatch(successAddNewBook(json.book))
+        getMyBooks(userId)
       }
     })
   }
