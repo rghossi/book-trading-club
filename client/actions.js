@@ -269,7 +269,7 @@ export function addNewBook(bookName, userId) {
         dispatch(errorAddNewBook())
       } else {
         dispatch(successAddNewBook(json.book))
-        getMyBooks(userId)
+        dispatch(getMyBooks(userId))
       }
     })
   }

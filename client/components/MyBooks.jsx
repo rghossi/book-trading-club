@@ -27,6 +27,7 @@ class MyBooks extends Component {
   	e.preventDefault();
     const { dispatch, user } = this.props;
     dispatch(addNewBook(this.state.book, user._id));
+    this.setState({book: ""});
   }
 
   render() {
