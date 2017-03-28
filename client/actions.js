@@ -223,7 +223,7 @@ export function getMyBooks(userId) {
       if (json.message){
         dispatch(errorMyBooks())
       } else {
-        let mybooks = json.filter((book) => String(book.owner) === String(userId))
+        let mybooks = json.books.filter((book) => String(book.owner) === String(userId))
         dispatch(successMyBooks(mybooks))
       }
     })

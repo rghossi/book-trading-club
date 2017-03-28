@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import { Row, Col, FormGroup, ControlLabel, 
   FormControl, Button, InputGroup,
   ListGroup, ListGroupItem } from 'react-bootstrap';
-import { updateUser } from '../actions';
+import { getMyBooks } from '../actions';
 
 class MyBooks extends Component {
 	constructor() {
@@ -13,6 +13,11 @@ class MyBooks extends Component {
 			book: "",
 		}
 	}
+
+  componentDidMount() {
+    const { dispatch, user } = this.props;
+    dispatch(getMyBooks(user._id));
+  }
 
 	handleBookChange(e) {
     this.setState({ book: e.target.value });
