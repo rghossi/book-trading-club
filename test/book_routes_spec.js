@@ -96,7 +96,7 @@ describe('routes : books', () => {
   	it ('should get all books', (done) => {
   		agent
         .post('/api/books/new')
-        .send({book: newBookData})
+        .send({bookName: "The Power of Habit"})
         .end((err, res) => {
         	if (err) throw err;
         	agent
@@ -108,10 +108,10 @@ describe('routes : books', () => {
             res.body.should.have.property('books');
             const books = res.body.books;
             books.length.should.equal(1);
-            books[0].name.should.equal(newBookData.name);
-            books[0].author.should.equal(newBookData.author);
-            books[0].isbn.should.equal(newBookData.isbn);
-            books[0].coverUrl.should.equal(newBookData.coverUrl);
+            books[0].name.should.equal("The Power of Habit");
+            books[0].author.should.equal("Charles Duhigg");
+            books[0].isbn.should.equal("9780679603856");
+            books[0].coverUrl.should.equal("http://books.google.com/books/content?id=O1MInVXd_aoC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api");
             should.exist(books[0].owner);
             done();
         	})
