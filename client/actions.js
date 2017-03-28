@@ -14,6 +14,9 @@ export const LOGOUT_ERROR = 'LOGOUT_ERROR';
 export const UPDATE_USER_REQUEST = 'UPDATE_USER_REQUEST';
 export const UPDATE_USER_SUCCESS = 'UPDATE_USER_SUCCESS';
 export const UPDATE_USER_ERROR = 'UPDATE_USER_ERROR';
+export const MYBOOKS_REQUEST = 'MYBOOKS_REQUEST';
+export const MYBOOKS_SUCCESS = 'MYBOOKS_SUCCESS';
+export const MYBOOKS_ERROR = 'MYBOOKS_ERROR';
 
 export function setState(state) {
   return {
@@ -181,6 +184,47 @@ export function updateUser(newUser, userId) {
       } else {
         dispatch(successUpdateUser(json))
         alert("Profile changes saved!")
+      }
+    })
+  }
+}
+
+function requestMyBooks(user) {
+  return {
+    type: MYBOOKS_REQUEST
+  }
+}
+
+function successMyBooks(books) {
+  return {
+    type: MYBOOKS_SUCCESS,
+    books
+  }
+}
+
+function errorMyBooks() {
+  return {
+    type: MYBOOKS_ERROR
+  }
+}
+
+export function getMyBooks(userId) {
+  return function (dispatch) {
+    dispatch(requestMyBooks());
+    return fetch("/api/books", {
+      credentials: 'same-origin',
+      method: 'GET',
+      headers: {  
+        "Content-Type": "application/json"
+      }
+    })
+    .then(response => response.json())
+    .then(json => {
+      if (json.message){
+        dispatch(errorMyBooks())
+      } else {
+        let mybooks = json.filter((book) => String(book.owner) === String(userId))
+        dispatch(successMyBooks(mybooks))
       }
     })
   }

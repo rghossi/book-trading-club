@@ -3,7 +3,8 @@ import { SET_STATE, SIGNUP_REQUEST, SIGNUP_SUCCESS,
   SIGNUP_ERROR, LOGIN_REQUEST, LOGIN_SUCCESS, 
   LOGIN_ERROR, LOGOUT_REQUEST, LOGOUT_SUCCESS, 
   LOGOUT_ERROR, UPDATE_USER_REQUEST, UPDATE_USER_SUCCESS, 
-  UPDATE_USER_ERROR } from './actions';
+  UPDATE_USER_ERROR, MYBOOKS_REQUEST, MYBOOKS_SUCCESS, 
+  MYBOOKS_ERROR } from './actions';
 
 function setState(state, newState) {
   return Object.assign({}, state, newState);
@@ -90,9 +91,33 @@ function auth(state = {
   }
 }
 
+function bookHandler(state = {}, action) {
+  switch (action.type) {
+    case MYBOOKS_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: true,
+        didInvalidate: false
+      })
+    case MYBOOKS_SUCCESS:
+      return Object.assign({}, state, {
+        isFetching: false,
+        didInvalidate: false,
+        books: action.books
+      })
+    case MYBOOKS_ERROR:
+      return Object.assign({}, state, {
+        isFetching: false,
+        didInvalidate: true
+      })
+    default:
+      return state;
+  }
+}
+
 const rootReducer = combineReducers({
 	setState,
-  auth
+  auth,
+  bookHandler
 })
 
 export default rootReducer

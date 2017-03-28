@@ -9,6 +9,7 @@ import LoginForm from './LoginForm';
 import SignupForm from './SignupForm';
 import NotFoundPage from './NotFoundPage';
 import Profile from './Profile';
+import MyBooks from './MyBooks';
 
 export default class Routes extends React.Component {
 
@@ -30,6 +31,7 @@ export default class Routes extends React.Component {
 		    <IndexRoute component={Home}/>
 		    <Route path="login" component={LoginForm}/>
         <Route path="signup" component={SignupForm}/>
+        <Route path="mybooks" component={MyBooks} onEnter={requireAuth}/>
         <Route path="profile" component={Profile} onEnter={requireAuth}/>
 		    <Route path="*" component={NotFoundPage}/>
 		  </Route>
