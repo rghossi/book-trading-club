@@ -11,6 +11,9 @@ export const LOGIN_ERROR = 'LOGIN_ERROR';
 export const LOGOUT_REQUEST = 'LOGOUT_REQUEST';
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 export const LOGOUT_ERROR = 'LOGOUT_ERROR';
+export const UPDATE_USER_REQUEST = 'UPDATE_USER_REQUEST';
+export const UPDATE_USER_SUCCESS = 'UPDATE_USER_SUCCESS';
+export const UPDATE_USER_ERROR = 'UPDATE_USER_ERROR';
 
 export function setState(state) {
   return {
@@ -137,6 +140,48 @@ export function logout() {
     .then(json => {
       dispatch(successLogout())
       dispatch(push('/'));
+    })
+  }
+}
+
+function requestUpdateUser(user) {
+  return {
+    type: UPDATE_USER_REQUEST
+  }
+}
+
+function successUpdateUser(user) {
+  return {
+    type: UPDATE_USER_SUCCESS,
+    user
+  }
+}
+
+function errorUpdateUser() {
+  return {
+    type: UPDATE_USER_ERROR
+  }
+}
+
+export function updateUser(newUser, userId) {
+  return function (dispatch) {
+    dispatch(requestUpdateUser());
+    return fetch("/api/users/" + userId, {
+      credentials: 'same-origin',
+      method: 'PUT',
+      headers: {  
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({"user": newUser})
+    })
+    .then(response => response.json())
+    .then(json => {
+      if (json.message){
+        dispatch(errorUpdateUser())
+      } else {
+        dispatch(successUpdateUser(json))
+        alert("Profile changes saved!")
+      }
     })
   }
 }

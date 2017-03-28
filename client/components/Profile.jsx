@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { Row, Col, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap';
+import { updateUser } from '../actions';
 
 class Profile extends Component {
 	constructor() {
@@ -34,11 +35,12 @@ class Profile extends Component {
 
   handleSubmit(e) {
   	e.preventDefault();
-  	console.log(this.state);
+    const { dispatch, user } = this.props;
+  	dispatch(updateUser(this.state, user._id));
   }
 
   render() {
-  	let { user } = this.props;
+  	let { user, isFetching } = this.props;
     return (
       <Row>
         <Col sm={6} smOffset={3} lg={4} lgOffset={4}> 
@@ -47,6 +49,7 @@ class Profile extends Component {
               <ControlLabel>Full Name</ControlLabel>
               <FormControl
                 type="text"
+                name="fullname"
                 value={this.state.name}
                 onChange={this.handleNameChange.bind(this)}
               />
@@ -67,7 +70,7 @@ class Profile extends Component {
                 onChange={this.handleStateChange.bind(this)}
               />
             </FormGroup>
-            <Button type="submit">
+            <Button type="submit" disabled={isFetching}>
     		      Save
     		    </Button>
           </form>
@@ -78,16 +81,18 @@ class Profile extends Component {
 }
 
 Profile.propTypes = {
-  user: PropTypes.object
+  user: PropTypes.object,
+  didInvalidate: PropTypes.bool,
+  isFetching: PropTypes.bool
 }
 
 function mapStateToProps(state) {
   const { auth } = state.reducer
   if (auth && auth.user) {
-  	const { user } = auth
-  	return { user };
+    const { user, didInvalidate, isFetching } = auth
+  	return { user, didInvalidate, isFetching };
   } else {
-  	return {};
+  	return { "didInvalidate": true };
   }
 }
 
