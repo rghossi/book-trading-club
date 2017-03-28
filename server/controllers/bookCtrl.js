@@ -1,19 +1,34 @@
+import https from 'https';
 import User from '../models/user';
 import Book from '../models/book';
 import Trade from '../models/trade';
 
 export function addBook(req, res) {
-	if (!req.body.book) res.status(400).send({message: "no book"});
+	if (!req.body.bookName) res.status(400).send({message: "no book"});
 	User.findById(req.user._id, function(err, user){
 		if (err) throw err;
 		if (!user) res.status(404).send({message: "User not found"});
 		else {
-			let newBook = new Book(req.body.book);
-			newBook.owner = user._id;
-			newBook.save((err, newBook) => {
-				if (err) throw err;
-				res.json({book: newBook});
-			})
+			https.get(`https://www.googleapis.com/books/v1/volumes?q=intitle:${req.body.bookName}`, function(res2) {
+			  var bodyChunks = [];
+			  res2.on('data', function(chunk) {
+			    bodyChunks.push(chunk);
+			  }).on('end', function() {
+			    var body = JSON.parse(Buffer.concat(bodyChunks).toString());
+			    if (body.totalItems < 1) res.status(404).send({message: "Book not found"});
+			    let newBook = new Book();
+					newBook.owner = user._id;
+					newBook.name = body.items[0].volumeInfo.title;
+					newBook.author = body.items[0].volumeInfo.authors[0];
+					newBook.isbn = body.items[0].volumeInfo.industryIdentifiers[0].identifier;
+					newBook.coverUrl = body.items[0].volumeInfo.imageLinks.thumbnail;
+					newBook.save((err, newBook) => {
+						if (err) throw err;
+						res.json({book: newBook});
+					})
+			  })
+			});
+			
 		}
 	})
 }
