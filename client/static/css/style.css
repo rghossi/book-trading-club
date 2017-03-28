@@ -59,3 +59,13 @@ button.link {
   cursor: pointer;
   font-size: 20px;
 }
+
+.list-group {
+  text-align: center;
+}
+
+.book-covers {
+  margin-right: 10px;
+  height: 180px;
+  width: 130px;
+}
