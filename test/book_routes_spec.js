@@ -25,7 +25,7 @@ describe('routes : books', () => {
 
 	before((done) => {
 		User.createNew(newUserData, function(err, user){
-			if (err.code !== 11000) throw err;
+			if (err && err.code !== 11000) throw err;
       done();
 		})
   });
@@ -62,7 +62,7 @@ describe('routes : books', () => {
   	it ('should add new book and return it', (done) => {
   		agent
         .post('/api/books/new')
-        .send({book: newBookData})
+        .send({bookName: "Ninja Javascript"})
         .end((err, res) => {
         	if (err) throw err;
         		res.should.have.status(200);
@@ -70,10 +70,10 @@ describe('routes : books', () => {
             res.body.should.have.property('book');
             const book = res.body.book;
             book.should.have.property('_id');
-            book.name.should.equal(newBookData.name);
-            book.author.should.equal(newBookData.author);
-            book.isbn.should.equal(newBookData.isbn);
-            book.coverUrl.should.equal(newBookData.coverUrl);
+            book.name.should.equal("Segredos do Ninja JavaScript");
+            book.author.should.equal("John Resig");
+            book.isbn.should.equal("9788575223284");
+            book.coverUrl.should.equal("http://books.google.com/books/content?id=S9NhDQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api");
             should.exist(book.owner);
             done();
         })
