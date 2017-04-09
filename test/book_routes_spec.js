@@ -92,6 +92,98 @@ describe('routes : books', () => {
   	})
   })
 
+  describe('DELETE /api/books/:bookId', () => {
+    it ('should delete a user owned book', (done) => {
+      agent
+        .post('/api/books/new')
+        .send({bookName: "Ninja Javascript"})
+        .end((err, res) => {
+          if (err) throw err;
+            res.should.have.status(200);
+            res.body.should.be.an('object');
+            res.body.should.have.property('book');
+            const book = res.body.book;
+            book.should.have.property('_id');
+            book.name.should.equal("Segredos do Ninja JavaScript");
+            book.author.should.equal("John Resig");
+            book.isbn.should.equal("9788575223284");
+            book.coverUrl.should.equal("http://books.google.com/books/content?id=S9NhDQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api");
+            should.exist(book.owner);
+            agent
+            .delete('/api/books/' + book._id)
+            .end((err, res) => {
+              res.should.have.status(200);
+              res.body.should.be.an('object');
+              res.body.message.shoudl.equal('Book ' + book.name + 'was succesfully removed!');
+              should.not.exist(res.body.book);
+              done();
+            })
+        })
+    })
+
+    it ('should not delete book if user is not logged in', (done) => {
+      agent
+        .post('/api/books/new')
+        .send({bookName: "Ninja Javascript"})
+        .end((err, res) => {
+          if (err) throw err;
+            res.should.have.status(200);
+            res.body.should.be.an('object');
+            res.body.should.have.property('book');
+            const book = res.body.book;
+            book.should.have.property('_id');
+            book.name.should.equal("Segredos do Ninja JavaScript");
+            book.author.should.equal("John Resig");
+            book.isbn.should.equal("9788575223284");
+            book.coverUrl.should.equal("http://books.google.com/books/content?id=S9NhDQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api");
+            should.exist(book.owner);
+            chai.request(server)
+            .delete('/api/books/' + book._id)
+            .end((err, res) => {
+              res.should.have.status(200);
+              res.body.should.be.an('object');
+              res.body.message.shoudl.equal('Book ' + book.name + 'was succesfully removed!');
+              should.not.exist(res.body.book);
+              done();
+            })
+        })
+    })
+
+    it ('should not delete book if user does not own that book', (done) => {
+      agent
+        .post('/api/books/new')
+        .send({bookName: "Ninja Javascript"})
+        .end((err, res) => {
+          if (err) throw err;
+          let book = res.body.book;
+          agent
+            .get('/api/logout')
+            .end((err, res) => {
+              if (err) throw err;
+              let email = "a9@b.com";
+              let password = "123456";
+              User.createNew({email, password}, function(err, user){
+                if (err && err.code !== 11000) throw err;
+                agent
+                  .post('/api/login')
+                  .send({email, password})
+                  .end((err, res) => {
+                    agent
+                      .delete('/api/books/' + book._id)
+                      .end((err, res) => {
+                        res.should.have.status(403);
+                        res.body.should.be.an('object');
+                        res.body.message.shoudl.equal('This is not one of your books!');
+                        should.not.exist(res.body.book);
+                        done();
+                      })
+                  })
+                })
+            })
+        })
+    })
+  })
+
   describe('GET /api/books', () => {
   	it ('should get all books', (done) => {
   		agent
