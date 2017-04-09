@@ -65,7 +65,7 @@ export function signup(user) {
     		dispatch(errorSignup())
     	} else {
       	dispatch(successSignup(json))
-        dispatch(push('/'));
+        dispatch(login(user));
     	}
     })
   }
