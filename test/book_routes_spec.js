@@ -114,8 +114,8 @@ describe('routes : books', () => {
             .end((err, res) => {
               res.should.have.status(200);
               res.body.should.be.an('object');
-              res.body.message.shoudl.equal('Book ' + book.name + 'was succesfully removed!');
-              should.not.exist(res.body.book);
+              res.body.message.should.equal('Book ' + book.name + 'was succesfully removed!');
+              should.exist(res.body.book);
               done();
             })
         })
@@ -140,9 +140,8 @@ describe('routes : books', () => {
             chai.request(server)
             .delete('/api/books/' + book._id)
             .end((err, res) => {
-              res.should.have.status(200);
+              res.should.have.status(401);
               res.body.should.be.an('object');
-              res.body.message.shoudl.equal('Book ' + book.name + 'was succesfully removed!');
               should.not.exist(res.body.book);
               done();
             })
@@ -173,7 +172,7 @@ describe('routes : books', () => {
                       .end((err, res) => {
                         res.should.have.status(403);
                         res.body.should.be.an('object');
-                        res.body.message.shoudl.equal('This is not one of your books!');
+                        res.body.message.should.equal('This is not one of your books!');
                         should.not.exist(res.body.book);
                         done();
                       })

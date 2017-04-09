@@ -15,6 +15,7 @@ router.post('/login', passport.authenticate('local'), function(req, res) {
 );
 
 router.get("/books", UserController.loggedIn, BookController.getAll);
+router.delete("/books/:bookId", UserController.loggedIn, BookController.deleteBook);
 router.post("/books/new", UserController.loggedIn, BookController.addBook);
 router.post("/books/trade", UserController.loggedIn, BookController.sendTradeRequest);
 

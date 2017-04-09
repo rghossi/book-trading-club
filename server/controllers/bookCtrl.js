@@ -33,6 +33,26 @@ export function addBook(req, res) {
 	})
 }
 
+export function deleteBook(req, res) {
+	if (!req.params.bookId) res.status(400).send({message: "no book to be deleted"});
+	Book.findById(req.params.bookId, function(err, book){
+		if (err) throw err;
+		if (!book) res.status(404).send({message: "Book not found"});
+		else {
+			if (String(book.owner) !== String(req.user._id)) res.status(403).send({message: "This is not one of your books!"});
+			else {
+				Book.findByIdAndRemove(req.params.bookId, function(err, book) {
+					if (err) throw err;
+					else {
+						let message = 'Book ' + book.name + 'was succesfully removed!';
+						res.json({book, message});
+					}
+				})
+			}
+		}
+	})
+}
+
 export function getAll(req, res) {
 	Book.find({}, function(err, books){
 		if (err) throw err;
