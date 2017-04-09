@@ -30,6 +30,13 @@ class MyBooks extends Component {
     this.setState({book: ""});
   }
 
+  delete(book) {
+    var r = confirm("Are you sure you want to delete " + book.name + "?");
+    if (r) {
+        console.log("yes");
+    }
+  }
+
   render() {
   	let { user, isFetching, books } = this.props;
     return (
@@ -57,7 +64,7 @@ class MyBooks extends Component {
       </Row>
       <Row>
         <ListGroup>
-          {books && books.map((book) => <img className="book-covers" key={book._id} src={book.coverUrl} />)}
+          {books && books.map((book) => <div className="book-covers"><Button onClick={() => this.delete(book)} className="link"><span id="closeButton">x</span></Button><img className="book-covers" key={book._id} src={book.coverUrl} /></div>)}
         </ListGroup>
       </Row>
       </div>

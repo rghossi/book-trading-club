@@ -64,8 +64,29 @@ button.link {
   text-align: center;
 }
 
+div.book-covers { 
+  display: inline-block;
+}
+
 .book-covers {
   margin-right: 10px;
   height: 180px;
   width: 130px;
+}
+
+.book-covers > .link {
+  position: absolute;
+  background:none!important;
+  border:none; 
+  font: inherit;
+  cursor: pointer;
+}
+
+#closeButton {
+  position: absolute;
+  float:right;
+  display:inline-block;
+  padding:2px 5px;
+  background: red;
+  color: white;
 }
