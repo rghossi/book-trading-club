@@ -20,6 +20,9 @@ export const MYBOOKS_ERROR = 'MYBOOKS_ERROR';
 export const ADD_NEW_BOOK_REQUEST = 'ADD_NEW_BOOK_REQUEST';
 export const ADD_NEW_BOOK_SUCCESS = 'ADD_NEW_BOOK_SUCCESS';
 export const ADD_NEW_BOOK_ERROR = 'ADD_NEW_BOOK_ERROR';
+export const DELETE_BOOK_REQUEST = 'DELETE_BOOK_REQUEST';
+export const DELETE_BOOK_SUCCESS = 'DELETE_BOOK_SUCCESS';
+export const DELETE_BOOK_ERROR = 'DELETE_BOOK_ERROR';
 
 export function setState(state) {
   return {
@@ -270,6 +273,46 @@ export function addNewBook(bookName, userId) {
       } else {
         dispatch(successAddNewBook(json.book))
         dispatch(getMyBooks(userId))
+      }
+    })
+  }
+}
+
+function requestDeleteBook() {
+  return {
+    type: DELETE_BOOK_REQUEST
+  }
+}
+
+function successDeleteBook() {
+  return {
+    type: DELETE_BOOK_SUCCESS
+  }
+}
+
+function errorDeleteBook() {
+  return {
+    type: DELETE_BOOK_ERROR
+  }
+}
+
+export function deleteBook(bookId) {
+  return function (dispatch) {
+    dispatch(requestDeleteBook());
+    return fetch("/api/books/" + bookId, {
+      credentials: 'same-origin',
+      method: 'DELETE',
+      headers: {  
+        "Content-Type": "application/json"
+      }
+    })
+    .then(response => response.json())
+    .then(json => {
+      if (!json.message.includes("succesfully removed")){
+        dispatch(errorDeleteBook())
+      } else {
+        dispatch(successDeleteBook())
+        dispatch(getMyBooks())
       }
     })
   }

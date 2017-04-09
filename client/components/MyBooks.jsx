@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import { Row, Col, FormGroup, ControlLabel, 
   FormControl, Button, InputGroup,
   ListGroup, ListGroupItem, Image } from 'react-bootstrap';
-import { getMyBooks, addNewBook } from '../actions';
+import { getMyBooks, addNewBook, deleteBook } from '../actions';
 
 class MyBooks extends Component {
 	constructor() {
@@ -31,9 +31,10 @@ class MyBooks extends Component {
   }
 
   delete(book) {
-    var r = confirm("Are you sure you want to delete " + book.name + "?");
+    const { dispatch } = this.props;
+    const r = confirm("Are you sure you want to delete " + book.name + "?");
     if (r) {
-        console.log("yes");
+      dispatch(deleteBook(book._id));
     }
   }
 
@@ -64,7 +65,14 @@ class MyBooks extends Component {
       </Row>
       <Row>
         <ListGroup>
-          {books && books.map((book) => <div className="book-covers"><Button onClick={() => this.delete(book)} className="link"><span id="closeButton">x</span></Button><img className="book-covers" key={book._id} src={book.coverUrl} /></div>)}
+          {books && books.map((book) => 
+            <div className="book-covers">
+              <Button onClick={() => this.delete(book)} className="link">
+                <span id="closeButton">x</span>
+              </Button>
+              <img className="book-covers" key={book._id} src={book.coverUrl} />
+            </div>
+          )}
         </ListGroup>
       </Row>
       </div>

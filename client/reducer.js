@@ -5,7 +5,8 @@ import { SET_STATE, SIGNUP_REQUEST, SIGNUP_SUCCESS,
   LOGOUT_ERROR, UPDATE_USER_REQUEST, UPDATE_USER_SUCCESS, 
   UPDATE_USER_ERROR, MYBOOKS_REQUEST, MYBOOKS_SUCCESS, 
   MYBOOKS_ERROR, ADD_NEW_BOOK_REQUEST, ADD_NEW_BOOK_SUCCESS, 
-  ADD_NEW_BOOK_ERROR } from './actions';
+  ADD_NEW_BOOK_ERROR, DELETE_BOOK_REQUEST, DELETE_BOOK_SUCCESS, 
+  DELETE_BOOK_ERROR } from './actions';
 
 function setState(state, newState) {
   return Object.assign({}, state, newState);
@@ -122,6 +123,21 @@ function bookHandler(state = {}, action) {
         book: action.book
       })
     case ADD_NEW_BOOK_ERROR:
+      return Object.assign({}, state, {
+        isFetching: false,
+        didInvalidate: true
+      })
+    case DELETE_BOOK_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: true,
+        didInvalidate: false
+      })
+    case DELETE_BOOK_SUCCESS:
+      return Object.assign({}, state, {
+        isFetching: false,
+        didInvalidate: false
+      })
+    case DELETE_BOOK_ERROR:
       return Object.assign({}, state, {
         isFetching: false,
         didInvalidate: true
