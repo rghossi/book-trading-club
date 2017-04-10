@@ -70,6 +70,8 @@ div.book-covers {
 
 .book-covers {
   margin-right: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
   height: 180px;
   width: 130px;
 }

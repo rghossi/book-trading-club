@@ -23,6 +23,9 @@ export const ADD_NEW_BOOK_ERROR = 'ADD_NEW_BOOK_ERROR';
 export const DELETE_BOOK_REQUEST = 'DELETE_BOOK_REQUEST';
 export const DELETE_BOOK_SUCCESS = 'DELETE_BOOK_SUCCESS';
 export const DELETE_BOOK_ERROR = 'DELETE_BOOK_ERROR';
+export const ALL_BOOKS_REQUEST = 'ALL_BOOKS_REQUEST';
+export const ALL_BOOKS_SUCCESS = 'ALL_BOOKS_SUCCESS';
+export const ALL_BOOKS_ERROR = 'ALL_BOOKS_ERROR';
 
 export function setState(state) {
   return {
@@ -313,6 +316,49 @@ export function deleteBook(bookId) {
       } else {
         dispatch(successDeleteBook())
         dispatch(getMyBooks())
+      }
+    })
+  }
+}
+
+function requestAllBooks() {
+  return {
+    type: ALL_BOOKS_REQUEST
+  }
+}
+
+function successAllBooks(availableBooks, myBooks) {
+  return {
+    type: ALL_BOOKS_SUCCESS,
+    books: myBooks,
+    availableBooks: availableBooks
+  }
+}
+
+function errorAllBooks() {
+  return {
+    type: ALL_BOOKS_ERROR
+  }
+}
+
+export function getAllBooks(userId) {
+  return function (dispatch) {
+    dispatch(requestAllBooks());
+    return fetch("/api/books", {
+      credentials: 'same-origin',
+      method: 'GET',
+      headers: {  
+        "Content-Type": "application/json"
+      }
+    })
+    .then(response => response.json())
+    .then(json => {
+      if (json.message){
+        dispatch(errorAllBooks())
+      } else {
+        let myBooks = json.books.filter((book) => String(book.owner) === String(userId))
+        let availableBooks = json.books.filter((book) => String(book.owner) !== String(userId) && !book.didTrade)
+        dispatch(successAllBooks(availableBooks, myBooks))
       }
     })
   }

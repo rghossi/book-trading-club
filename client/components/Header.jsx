@@ -28,6 +28,7 @@ class Header extends Component {
 			    <Nav pullRight>
 			    	{!user && <NavItem componentClass="span"><Link className="link" to="/login">Login</Link></NavItem>}
 			    	{!user && <NavItem componentClass="span"><Link className="link" to="/signup">Signup</Link></NavItem>}
+            {user && <NavItem componentClass="span"><Link className="link" to="/trading">Trading Area</Link></NavItem>}
             {user && <NavItem componentClass="span"><Link className="link" to="/mybooks">My Books</Link></NavItem>}
 			    	{user && <NavItem componentClass="span"><Link className="link" to="/profile">Profile</Link></NavItem>}
             {user && <NavItem componentClass="span"><Button onClick={this.logout} className="link">Logout</Button></NavItem>}

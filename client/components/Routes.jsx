@@ -10,6 +10,7 @@ import SignupForm from './SignupForm';
 import NotFoundPage from './NotFoundPage';
 import Profile from './Profile';
 import MyBooks from './MyBooks';
+import TradingArea from './TradingArea';
 
 export default class Routes extends React.Component {
 
@@ -33,6 +34,7 @@ export default class Routes extends React.Component {
         <Route path="signup" component={SignupForm}/>
         <Route path="mybooks" component={MyBooks} onEnter={requireAuth}/>
         <Route path="profile" component={Profile} onEnter={requireAuth}/>
+        <Route path="trading" component={TradingArea} onEnter={requireAuth}/>
 		    <Route path="*" component={NotFoundPage}/>
 		  </Route>
 		);
