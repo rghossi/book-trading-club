@@ -356,7 +356,7 @@ export function getAllBooks(userId) {
       if (json.message){
         dispatch(errorAllBooks())
       } else {
-        let myBooks = json.books.filter((book) => String(book.owner) === String(userId))
+        let myBooks = json.books.filter((book) => String(book.owner) === String(userId) && !book.didTrade)
         let availableBooks = json.books.filter((book) => String(book.owner) !== String(userId) && !book.didTrade)
         dispatch(successAllBooks(availableBooks, myBooks))
       }
